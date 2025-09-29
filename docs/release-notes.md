@@ -8,6 +8,8 @@ nav_order: 8
 
 Major changes:
 
+- Add Fedora 44 signing key; drop Fedora 41 signing key
+
 Minor changes:
 
 - Restore formatting of progress reporting to pre 0.24.0 behavior.
@@ -15,6 +17,11 @@ Minor changes:
 Internal changes:
 
 - Add initial TMT tests and a new workflow to execute tests on PRs
+- Use release profile for smaller binaries in CI testing
+- Support cryptsetup-2.8.0's UUIDs naming of dm-integrity devices
+- rootmap: Inject `root=/dev/disk/by-uuid/dm-mpath-$UUID` when on multipath
+- rootmap: Inject `mpath.wwid=$WWID` when on multipath
+- rootmap: Bypass cache when querying filesystem UUID for `root karg` 
 
 Packaging changes:
 
