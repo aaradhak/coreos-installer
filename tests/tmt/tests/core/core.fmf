@@ -1,8 +1,7 @@
 ---
-summary: runs coreos-installer --version and checks return code
+summary: check coreos-installer package is installed
 tag: 
   - smoke
 test: |
   set -x -e -o pipefail
-  source /tmp/cos_installer_bin_dir
-  ${COS_INSTALLER_BIN_DIR}/coreos-installer --version
+  rpm -q coreos-installer

@@ -9,6 +9,8 @@ files_to_sync:
 
 # name in upstream package repository or registry (e.g. in PyPI)
 upstream_package_name: coreos-installer
+srpm_build_deps:
+    - wget
 
 packages:
   coreos-installer-fedora:
@@ -21,6 +23,23 @@ packages:
         - bash -c 'echo "- New upstream release"'
 
 jobs: 
+
+- job: copr_build
+  trigger: pull_request
+  packages: [coreos-installer-fedora]
+  targets:
+    - fedora-rawhide-x86_64
+    - centos-stream-10-x86_64
+    - centos-stream-9-x86_64
+
+- job: tests
+  trigger: pull_request
+  packages: [coreos-installer-fedora]
+  targets:
+    - fedora-rawhide-x86_64
+    - centos-stream-10-x86_64
+    - centos-stream-9-x86_64
+  tmt_plan: /tests/tmt/plans/smoke
 
 - job: propose_downstream
   trigger: release
