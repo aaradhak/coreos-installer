@@ -25,7 +25,7 @@ on:
       use_built_from_src:
         description: 'Built coreos-installer from source instead of install distro package'
         required: false
-        default: 'true'
+        default: 'false'
 
 jobs:
   tmt-tests:
@@ -50,7 +50,7 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
       - name: Build CoreOS Installer
-        if: github.event.inputs.use_built_from_src == '' || github.event.inputs.use_built_from_src == 'true'
+        if: github.event.inputs.use_built_from_src == 'true'
         run: |
           set -x -e -o pipefail
           make
@@ -67,12 +67,11 @@ jobs:
           if [ -n "${{ github.event.inputs.plan_filter }}" ]; then
             PLAN_FILTER_PARAM="plan --filter '${{ github.event.inputs.plan_filter }}'"
           fi
-          if [ -z "${{ github.event.inputs.use_built_from_src }}" ] || [ "${{ github.event.inputs.use_built_from_src }}" == "true" ]; then
+          if [ "${{ github.event.inputs.use_built_from_src }}" == "true" ]; then
             CONTEXT_PARAM="--context use_built_from_src=true"
           else
             CONTEXT_PARAM="--context use_built_from_src=false"
           fi
           # eval is used to allow the use of variables in the command
           # and to avoid issues withe the tmt --filter option
-          eval "tmt $CONTEXT_PARAM run --all --debug -vvvv provision $TMT_PROVISION_OPTS $PLAN_FILTER_PARAM"
-
+          eval "tmt $CONTEXT_PARAM run --all --debug -vvv provision $TMT_PROVISION_OPTS $PLAN_FILTER_PARAM"
